@@ -1,10 +1,10 @@
-# OpenMausBot v0.1 AI Bot Team Chat: Railway template spec
+# OpenMausBot AI Bot Team Chat: Railway template spec
 
 ## Listing
 
 | Field | Value |
 |---|---|
-| Name | **OpenMausBot v0.1 AI Bot Team Chat** (`v0.1` from the GitHub release `v0.1.134`, the pinned build; upstream ships a release almost daily, so the name carries major.minor only) |
+| Name | **OpenMausBot AI Bot Team Chat** (`v0.1` from the GitHub release `v0.1.134`, the pinned build; upstream ships a release almost daily, so the name carries major.minor only) |
 | Description | Chat with your own team of AI agents, each with its own model and tools. (72 chars, as given) |
 | Category | AI/ML |
 | Tags | openmausbot, ai-agents, multi-agent, claude-code, codex, chat, self-hosted, grok-bot-alternative |

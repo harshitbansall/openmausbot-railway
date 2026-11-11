@@ -1,5 +1,6 @@
 {
-  "name": "OpenMausBot v0.1 AI Bot Team Chat",
+  "name": "OpenMausBot AI Bot Team Chat",
+  "idSeed": "OpenMausBot v0.1 AI Bot Team Chat",
   "description": "Chat with your own team of AI agents, each with its own model and tools.",
   "category": "AI/ML",
   "tags": [
