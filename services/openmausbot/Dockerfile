@@ -17,6 +17,12 @@
 #   Claude Code 2.1.308 (npm "stable" tag, 2026-10-22), Codex 0.166.0 (npm "latest", 2026-10-29).
 # Upgrade: change the tag and digest below (and the engine pins if you like), redeploy; the RUN checks fail the
 # build if the upstream files or routes this wrapper relies on have moved. Everything stateful is on /data.
+#
+# Local patch: upstream's RemoteMcpClient caps the session to the version it
+# offered (2025-06-18) instead of using the version the server negotiated.
+# OpenObserve negotiates 2025-11-25 and rejects 2025-06-18 on follow-up
+# requests. railway/patch-mcp-protocol.mjs patches the bundled client. Remove
+# this when upstream ships the fix.
 # Persistence is declared in template.json (Railway volume at /data); this file declares no Docker volume.
 
 FROM caddy:2.11.7@sha256:36c24ad91a7ff7bc4c87fe22bfa8df3c4b18da0773d73fc12ee2c52b98c0bb7e AS edge
@@ -39,8 +45,12 @@ RUN export HOME=/tmp/omb-build-home \
  && rm -rf /tmp/omb-build-home /tmp/omb-npm-cache /tmp/node-compile-cache
 
 COPY --from=edge /caddy /usr/local/bin/caddy
-COPY railway/lib.mjs railway/supervisor.mjs railway/owner-signin.mjs railway/omb.mjs railway/Caddyfile /opt/omb-railway/
+COPY railway/lib.mjs railway/supervisor.mjs railway/owner-signin.mjs railway/omb.mjs railway/Caddyfile railway/patch-mcp-protocol.mjs /opt/omb-railway/
 COPY railway/omb /usr/local/bin/omb
+
+# Fix upstream's MCP protocol negotiation before the image is deployed. The
+# script fails the build if the pinned bundle no longer matches.
+RUN node /opt/omb-railway/patch-mcp-protocol.mjs
 
 # Engines update themselves only through Settings -> Engines (into /data); the global copies are root's.
 ENV DISABLE_AUTOUPDATER=1 \
@@ -53,7 +63,7 @@ RUN set -eu; \
     chown -R root:root /opt/omb-railway /usr/local/bin/omb /usr/local/bin/caddy; \
     chmod 0755 /opt/omb-railway /usr/local/bin/omb /usr/local/bin/caddy; \
     chmod 0644 /opt/omb-railway/*; \
-    for f in lib supervisor owner-signin omb; do node --check "/opt/omb-railway/$f.mjs"; done; \
+    for f in lib supervisor owner-signin omb patch-mcp-protocol; do node --check "/opt/omb-railway/$f.mjs"; done; \
     sh -n /usr/local/bin/omb; \
     caddy version; \
     HOME=/tmp/caddy-check XDG_DATA_HOME=/tmp/caddy-check XDG_CONFIG_HOME=/tmp/caddy-check PORT=8080 \
@@ -68,6 +78,8 @@ RUN set -eu; \
     grep -qF 'function isProxied(' "$d/index.js"; \
     grep -qF '"127.0.0.1"' "$d/index.js"; \
     grep -qF 'OMB_PUBLIC_URL' "$d/index.js"; \
+    grep -qF 'PROTOCOL_VERSION="2025-11-25"' "$d/index.js"; \
+    ! grep -qF 'protocolVersion<=PROTOCOL_VERSION' "$d/index.js"; \
     test "$(id -u maus)" != 0; \
     test "$(id -u ombedge)" != 0; \
     test -d /app/dist
