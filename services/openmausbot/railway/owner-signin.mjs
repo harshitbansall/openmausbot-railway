@@ -73,7 +73,7 @@ function send(res, status, html, extra = {}) {
     "content-type": "text/html; charset=utf-8",
     "cache-control": "no-store",
     "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'",
-    "referrer-policy": "no-referrer",
+    "referrer-policy": "same-origin",
     "x-content-type-options": "nosniff",
     "x-frame-options": "DENY",
     ...extra,

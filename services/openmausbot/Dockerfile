@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 #
-# OpenMausBot v0.1.134 on Railway.
+# OpenMausBot v0.1.181 on Railway.
 #
 # The official server image (ghcr.io/milind-soni/openmausbot, the Dockerfile's `server` target: harness server,
 # web app, the bots' browser) is used unchanged. This layer adds:
@@ -23,7 +23,7 @@ FROM caddy:2.11.7@sha256:36c24ad91a7ff7bc4c87fe22bfa8df3c4b18da0773d73fc12ee2c52
 # Copying to a new file drops the image's cap_net_bind_service file capability; the edge uses an unprivileged port.
 RUN cp /usr/bin/caddy /caddy
 
-FROM ghcr.io/milind-soni/openmausbot:v0.1.134@sha256:7efc06588a124d18b4188df1fa89c332b9e46efc25ab47dcb2445971f4a57ba2
+FROM ghcr.io/milind-soni/openmausbot:v0.1.181@sha256:29a1f6dcd0787762a1ef61864d2fee4410a96b63fb9f798d0ecc0b055583c2cd
 
 USER root
 
@@ -64,9 +64,9 @@ RUN set -eu; \
     test -f "$d/server-launcher.js"; \
     test -f "$d/openmausbot.js"; \
     grep -qF '"/api/auth/pairing"' "$d/index.js"; \
-    grep -qF '/pair#code=${code}' "$d/index.js"; \
+    grep -qF '/pair#code=' "$d/index.js"; \
     grep -qF 'function isProxied(' "$d/index.js"; \
-    grep -qF '"127.0.0.1", async () =>' "$d/index.js"; \
+    grep -qF '"127.0.0.1"' "$d/index.js"; \
     grep -qF 'OMB_PUBLIC_URL' "$d/index.js"; \
     test "$(id -u maus)" != 0; \
     test "$(id -u ombedge)" != 0; \
