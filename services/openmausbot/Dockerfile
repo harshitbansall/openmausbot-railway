@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 #
-# OpenMausBot v0.1.181 on Railway.
+# OpenMausBot v0.1.184 on Railway.
 #
 # The official server image (ghcr.io/milind-soni/openmausbot, the Dockerfile's `server` target: harness server,
 # web app, the bots' browser) is used unchanged. This layer adds:
@@ -29,7 +29,7 @@ FROM caddy:2.11.7@sha256:36c24ad91a7ff7bc4c87fe22bfa8df3c4b18da0773d73fc12ee2c52
 # Copying to a new file drops the image's cap_net_bind_service file capability; the edge uses an unprivileged port.
 RUN cp /usr/bin/caddy /caddy
 
-FROM ghcr.io/milind-soni/openmausbot:v0.1.181@sha256:29a1f6dcd0787762a1ef61864d2fee4410a96b63fb9f798d0ecc0b055583c2cd
+FROM ghcr.io/milind-soni/openmausbot:v0.1.184@sha256:e06e77444864442f3d4eb55a47c2c009d95135677edd609bbbf7c576f6e50596
 
 USER root
 
